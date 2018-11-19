@@ -1,0 +1,7 @@
+Landing Page
+About Me
+Story
+Resume
+Portfoli/My work
+ -git hub
+ -one for each module
