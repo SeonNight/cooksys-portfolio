@@ -15,6 +15,8 @@ const AppBody = styled.div`
 
 const AppContent = styled.div`
   max-width:600px;
+  padding: 20px;
+  background-color: rgb(229, 237, 240);
 `
 const NavBody = styled.div`
   background-color: rgba(255, 255, 255, 0.575);
@@ -22,8 +24,13 @@ const NavBody = styled.div`
   top: 0;
   width: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   z-index: 1;
+`
+const NavButtonDistribution = styled.div`
+  width:600px;
+  display: flex;
+  justify-content: space-around;
 `
 
 const NavButton = styled.button`
@@ -52,25 +59,6 @@ class App extends Component {
     page: '0'
   }
 
-  buttons = [
-    {
-      name: 'Home',
-      value: 1
-    },
-    {
-      name: 'About',
-      value: 2
-    },
-    {
-      name: 'My Work',
-      value: 3
-    }]
-
-  setPageValue(e) {
-    console.log(this)
-    this.setState({page: 1})
-  }
-
   handleClick = event => {
     event.target.classList.add('clickedState')
     this.setState({page: event.target.value})
@@ -78,30 +66,31 @@ class App extends Component {
 
   render() {
     return(
-      <div>
-        <Router>
-          <div>
+      <Router>
+        <div>
             <NavBody>
-              <Link to ='/'>
-                <NavButton onClick={this.handleClick} value='0'>Home</NavButton>
-              </Link>
-              <Link to ='/About'>
-                <NavButton onClick={this.handleClick} value='1'>About Me</NavButton>
-              </Link>
-              <Link to ='/Portfolio'>
-                <NavButton onClick={this.handleClick} value='2'>My Work</NavButton>
-              </Link>
+              <NavButtonDistribution>
+                <Link to ='/Home'>
+                  <NavButton onClick={this.handleClick} value='0'>Home</NavButton>
+                </Link>
+                <Link to ='/About'>
+                  <NavButton onClick={this.handleClick} value='1'>About Me</NavButton>
+                </Link>
+                <Link to ='/Portfolio'>
+                  <NavButton onClick={this.handleClick} value='2'>My Work</NavButton>
+                </Link>
+              </NavButtonDistribution>
             </NavBody>
             <AppBody>
               <AppContent>
-                <Route path="/" component={Home}/>
+                <Route path="/Home" component={Home}/>
                 <Route path="/About" component={About}/>
                 <Route path="/Portfolio" component={Portfolio}/>
               </AppContent>
             </AppBody>
-          </div>
-        </Router>
-      </div>)
+        </div>
+      </Router>
+    )
   }
 }
 

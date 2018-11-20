@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
 
+
+import styled from 'styled-components'
+
+const ResumeImage = styled.img`
+  width: 100%;
+  margin: auto;
+  object-fit: content;
+`
+
 class About extends Component {
   render() {
     return(
@@ -12,7 +21,7 @@ class About extends Component {
           </div>
           <div>
             <h2>Resume</h2>
-            <img src={require("../../images/resume.png")} alt="resume" />
+            <ResumeImage src={require("../../images/resume.png")} alt="resume" />
           </div>
         </div>
       </div>)
