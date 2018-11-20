@@ -17,8 +17,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-.clickedState {
-  background-color: rgb(120, 37, 158);
-  border: solid 3px black;
-}
