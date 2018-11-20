@@ -1,0 +1,26 @@
+.info {
+  background: rgb(199, 162, 131);
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.description {
+  background: rgb(255, 205, 165);
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 10px;
+  color: rgb(53, 53, 53);
+  font-style: italic;
+  font-size: 10pt;
+}
+
+.effect {
+  background: rgb(255, 205, 165);
+  border: 2px solid black;
+  border-radius: 5px;
+  margin: 10px;
+  color: black;
+  font-weight: bold;
+  font-size: 15pt;
+}
