@@ -3,7 +3,8 @@ import Home from '../Home/Home'
 import About from '../About/About'
 import Portfolio from '../Portfolio/Portfolio'
 import Nav from '../Nav/Nav'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import Landing from '../Landing/Landing'
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 import styled from 'styled-components'
 
@@ -51,19 +52,21 @@ class App extends Component {
         <div>
           <NavBody>
             <NavButtonDistribution>
-              <Nav name='Home' onClick={this.handleClick} state={this.state.page} value='0' link='/Home'/>
-              <Nav name='About Me' onClick={this.handleClick} state={this.state.page} value='1' link='/About'/>
-              <Nav name='Portfolio' onClick={this.handleClick} state={this.state.page} value='2' link='/Portfolio'/>
+              <Nav name='Home' onClick={this.handleClick} state={this.state.page} value='1' link='/Home'/>
+              <Nav name='About Me' onClick={this.handleClick} state={this.state.page} value='2' link='/About'/>
+              <Nav name='Portfolio' onClick={this.handleClick} state={this.state.page} value='3' link='/Portfolio'/>
             </NavButtonDistribution>
           </NavBody>
-          <AppBody>
-            <AppContent>
-              <Route path="/" />
-              <Route path="/Home" component={Home}/>
-              <Route path="/About" component={About}/>
-              <Route path="/Portfolio" component={Portfolio}/>
-            </AppContent>
-          </AppBody>
+          <Switch>
+            <Route path="/" exact component={Landing}/>
+            <AppBody>
+              <AppContent>
+                <Route path="/Home" component={Home}/>
+                <Route path="/About" component={About}/>
+                <Route path="/Portfolio" component={Portfolio}/>
+              </AppContent>
+            </AppBody>
+          </Switch>
         </div>
       </Router>
     )

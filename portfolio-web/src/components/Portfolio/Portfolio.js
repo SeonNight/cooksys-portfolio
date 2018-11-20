@@ -13,11 +13,16 @@ const Content = styled.div`
 
 const CardAlign = styled.div`
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+`
+/*
+const CardAlign = styled.div`
+  display: flex;
   flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
-`
-
+`*/
 class Portfolio extends Component {
   state = {
     cardInfo: [
