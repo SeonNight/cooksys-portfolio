@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import styled from 'styled-components'
 
 
-import fileShare from '../../../images/file-share.PNG';
-import socialMedia from '../../../images/social-media.PNG';
-import devDuel from '../../../images/dev-duel-dueling.PNG';
+import fileShare from '../../../../images/file-share.PNG';
+import socialMedia from '../../../../images/social-media.PNG';
+import devDuel from '../../../../images/dev-duel-dueling.PNG';
 
 const Card = styled.div`
   width: 450px;
@@ -83,7 +83,7 @@ class PortfolioCard extends Component {
             <h1>{this.props.name}</h1>
             <PreviewImage src={this.getImage(this.props.imgLink)} alt="snapshot of the project"/>
             <p>{this.props.description}</p>
-            <Content><GitImg src={require("../../../images/GitHub-Mark-32px.png")} alt="link"/></Content>
+            <Content><GitImg src={require("../../../../images/GitHub-Mark-32px.png")} alt="link"/></Content>
           </Content>
         </GitLink>
       </Card>

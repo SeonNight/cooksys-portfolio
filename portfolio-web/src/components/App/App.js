@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
-import Home from '../Home/Home'
-import About from '../About/About'
-import Portfolio from '../Portfolio/Portfolio'
-import Nav from '../Nav/Nav'
-import Landing from '../Landing/Landing'
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import Home from '../Pages/Home/Home'
+import About from '../Pages/About/About'
+import Portfolio from '../Pages/Portfolio/Portfolio'
+import Nav from '../Elements/Nav/Nav'
+import Landing from '../Pages/Landing/Landing'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
 
 import styled from 'styled-components'
+
+
+const BackgroundImage = styled.img `
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  object-fit: cover;
+  z-index: -2;
+  opacity: 0.7;
+  filter: blur(1.5px);
+`
 
 const AppBody = styled.div`
   width: 100%;
@@ -18,7 +31,7 @@ const AppBody = styled.div`
 const AppContent = styled.div`
   max-width:600px;
   padding: 20px;
-  background-color: rgb(229, 237, 240);
+  background-color: rgb(229, 237, 240, 0.5);
 `
 const NavBody = styled.div`
   background-color: rgba(255, 255, 255, 0.575);
@@ -50,6 +63,7 @@ class App extends Component {
     return(
       <Router>
         <div>
+          <BackgroundImage src={require("../../images/bird-house-inside.png")} alt="link"/>
           <NavBody>
             <NavButtonDistribution>
               <Nav name='Home' onClick={this.handleClick} state={this.state.page} value='1' link='/Home'/>
@@ -57,7 +71,6 @@ class App extends Component {
               <Nav name='Portfolio' onClick={this.handleClick} state={this.state.page} value='3' link='/Portfolio'/>
             </NavButtonDistribution>
           </NavBody>
-          <Switch>
             <Route path="/" exact component={Landing}/>
             <AppBody>
               <AppContent>
@@ -66,11 +79,22 @@ class App extends Component {
                 <Route path="/Portfolio" component={Portfolio}/>
               </AppContent>
             </AppBody>
-          </Switch>
         </div>
       </Router>
     )
   }
 }
+//Get rid of exact after testing
+/*
+<Switch>
+  <Route path="/" exact component={Landing}/>
+  <AppBody>
+    <AppContent>
+      <Route path="/Home" component={Home}/>
+      <Route path="/About" component={About}/>
+      <Route path="/Portfolio" component={Portfolio}/>
+    </AppContent>
+  </AppBody>
+</Switch>*/
 
 export default App;

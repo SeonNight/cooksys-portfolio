@@ -21,7 +21,7 @@ class About extends Component {
           </div>
           <div>
             <h2>Resume</h2>
-            <ResumeImage src={require("../../images/resume.png")} alt="resume" />
+            <ResumeImage src={require("../../../images/resume.png")} alt="resume" />
           </div>
         </div>
       </div>)
