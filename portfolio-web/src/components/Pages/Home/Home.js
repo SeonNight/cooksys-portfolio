@@ -1,21 +1,185 @@
 import React, { Component } from 'react';
-import Nav from '../../Elements/ChatScreen/ChatScreen'
+import styled from 'styled-components'
+import ChatScreen from '../../Elements/ChatScreen/ChatScreen'
+import CodeBird from '../../Elements/CodeBird/CodeBird'
+
+const HomeBody = styled.div`
+  width: 100%;
+`
+const ChatBody = styled.div`
+  position: aboslute;
+`
+
+const ChatContainer = styled.div`
+  position: relative;
+  right: 50px;
+`
+
+const CodeBirdBody = styled.div`
+  position: absolute;
+`
+
+const CodBirdContainer = styled.div`
+  width: 150px;
+  height: 130px;
+  position: relative;
+  z-index: 4;
+
+  bottom: 80px;
+  left: 400px;
+`
 
 class Home extends Component {
+  chat = [{
+    text: 'Hey there!',
+    options: [],
+    nextValue: 1,
+    pose: 'happy'
+  },{
+    text: 'How can I help you?',
+    options: [{
+      text: 'About you',
+      value: -2,
+      link: '/About'
+    },{
+      text: 'Your Work',
+      value: -2,
+      link: '/Portfolio'
+    },{
+      text: 'Are you actually a bird?',
+      value: 2
+    },{
+      text: 'Bye',
+      value: 12
+    }],
+    nextValue: -1,
+    pose: 'normal'
+  },{
+    text: 'No, it\'s just easier to animate a bird than a human',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'Are you sure you\'re not a bird?',
+      value: 3
+    }],
+    nextValue: -1,
+    pose: 'inquisitive'
+  },{
+    text: 'Yes, I am not a bird',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'Are you REALLY sure?',
+      value: 4
+    }],
+    nextValue: -1,
+    pose: 'normal'
+  },{
+    text: 'Yes, really',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'Really? Really?',
+      value: 5
+    }],
+    nextValue: -1,
+    pose: 'normal'
+  },{
+    text: 'Yes, I am not a bird',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'Really? Really? Really?',
+      value: 6
+    }],
+    nextValue: -1,
+    pose: 'dotdotdot'
+  },{
+    text: 'I am not a bird',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'I\'m pretty sure you\'re a bird',
+      value: 7
+    }],
+    nextValue: -1,
+    pose: 'dotdotdot'
+  },{
+    text: 'I\'m NOT a bird',
+    options: [{
+      text: 'Okay',
+      value: 1
+    },{
+      text: 'Yes, you are, your flapping your wings right in front of me',
+      value: 8
+    }],
+    nextValue: -1,
+    pose: 'angry'
+  },{
+    text: '...',
+    options: [],
+    nextValue: 9,
+    pose: 'dotdotdot'
+  },{
+    text: '...',
+    options: [],
+    nextValue: 10,
+    pose: 'dotdotdot'
+  },{
+    text: '...',
+    options: [],
+    nextValue: 11,
+    pose: 'dotdotdot'
+  },{
+    text: '...',
+    options: [],
+    nextValue: 0,
+    pose: 'dotdotdot'
+  },{
+    text: 'Need to go?',
+    options: [],
+    nextValue: 13,
+    pose: 'questioning'
+  },{
+    text: 'Well, I hope to see you soon!',
+    options: [],
+    nextValue: -2,
+    pose: 'happy'
+  }]
+
+  state = {
+    birdHidden: false,
+    birdPose: 'happy'
+  }
+
+  //Why does it have to be in this format?
+  UpdateBirdPose = pose => {
+    this.setState({birdPose: pose})
+  }
+
   render() {
     return(
-      <div>
-        <Nav />
-        <h1>Home</h1>
-        <p>Hey there</p>
-        <p>How are you today?</p>
-        <p>I should introduce myself</p>
-        <p>Hello, my name is Seong Kim</p>
-
-        <p>What do you want to know?</p>
-
-        <p>About You, Your Work, Are you an actual bird? Bye</p>
-
+      <HomeBody>
+        <ChatBody>
+          <ChatContainer>
+            <ChatScreen chatStart={[this.chat[0]]} chats={this.chat} updateBirdPose={this.UpdateBirdPose}/>
+          </ChatContainer>
+        </ChatBody>
+        <CodeBirdBody>
+          <CodBirdContainer>
+            <CodeBird hidden={this.state.birdHidden} pose={this.state.birdPose}/>
+          </CodBirdContainer>
+        </CodeBirdBody>
+      </HomeBody>
+    )
+  }
+}
+/*
         <p>I am a computer developer with a love of the arts</p>
         <p>Mainly pictures and animations</p>
         <p>Was never that into theater</p>
@@ -51,30 +215,6 @@ class Home extends Component {
         <p>Using GitHub API, I got profile data of the name that was typed in</p>
         <p>You can also get two people and then let them battle each other</p>
         <p>And this one has actual front-end prettiness</p>
-
-        <p>...(if looping again)</p>
-        <p>No, this is just a simpler avatar to manipulate</p>
-        <p>Okay, Are you sure you're not a bird?</p>
-        <p>Yes, I am not a bird</p>
-        <p>Okay, Really?</p>
-        <p>Yes really</p>
-        <p>Okay, Really? Really?</p>
-        <p>I am not really a bird</p>
-        <p>Okay, Really? Really? Really?</p>
-        <p>I am NOT a bird</p>
-        <p>Okay, Really? Really? Really? Really?</p>
-        <p>I repeat, I am NOT a BIRD</p>
-        <p>Okay, Really? Really? Really? Really? Reeaallllyy?</p>
-        <p>...</p>
-        <p>...</p>
-        <p>...</p>
-        <p>...</p>
-
-        <p>Need to go?</p>
-        <p>Well, I hope to see you soon</p>
-        <p>So long!</p>
-      </div>)
-  }
-}
+      </div> */
 
 export default Home

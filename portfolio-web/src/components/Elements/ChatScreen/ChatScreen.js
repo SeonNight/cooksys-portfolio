@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 
-import styled from 'styled-components'
+import styled, {keyframes} from 'styled-components'
 
+import DelayLink from '../DelayLink/DelayLink'
 const ChatScreenBody = styled.div`
 
 `
@@ -11,7 +12,7 @@ const Pad = styled.div`
   border-radius: 20px;
   height: 300px;
   width: 500px;
-  
+  box-shadow: 2px 5px 5px grey;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,25 +26,21 @@ const Screen = styled.div`
   
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
 `
 
 const TextBody = styled.div`
   width: 100%;
-  height: 90%;
+
+  overflow: auto;
+`
+
+const TextBox = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: flex-end;
-`
-
-const TextBox = styled.div`
-  background-color: rgb(0, 140, 255);
-  border-radius: 5px;
-  max-width: 300px;
-  color: white;
-  font-size: 12pt;
-  margin: 10px;
-  padding: 5px;
 `
 const InputBody = styled.div`
   width: 100%;
@@ -92,63 +89,198 @@ const InputHelp = styled.div`
   border-top: 1px solid black
   width: 100%;
   height: 10%;
+  font-weight: bold;
 `
-const InputHelpText = styled.div`
+
+const InputHelpTextIdleAnimation = keyframes`
+  0% {
+    color: grey;
+  }
+  50% {
+    color: rgb(73, 73, 73);
+  }
+  100% {
+    color: grey;
+  }
+`
+
+const InputHelpText = styled.button`
+  border: none;
+  background-color: rgb(0, 0, 0, 0);
+  outline: none;
+
   color: grey;
   font-style: italic;
   font-size: 10pt;
+
+  &:hover {
+    cursor: pointer;
+  }
+  
+  animation: ${InputHelpTextIdleAnimation} 1.8s linear infinite;
 `
 
 class ChatScreenInput extends React.Component {
-  _handleKeyPress = (e) => {
-    console.log(e.key)
-    if (e.key === 'Enter') {
-      console.log('do validate');
+  componentDidMount(){
+    this.nameInput.focus();
+  }
+  //Focus back on this button every time
+  componentDidUpdate(prevProps, prevState) {
+    this.nameInput.focus();
+  }
+
+  render() {
+    console.log(this)
+    if(!this.props.backToLaunch) {
+      return (
+          <InputHelpText
+            disabled={this.props.enabled? "" : "disabled"}
+            ref={(input) => {this.nameInput = input}}
+            value={this.props.value}
+            onClick={this.props.handleOnClick}>
+              {this.props.enabled? "Click or Press Enter" : "Choose an Option"}
+          </InputHelpText>
+        )
+    } else {
+      return (
+        <DelayLink to ='/' delay={5000}>
+          <InputHelpText ref={(input) => {this.nameInput = input}}>
+            Bye
+          </InputHelpText>
+        </DelayLink>
+      )
+    }
+  }
+}
+
+class ChatScreenText extends Component {
+  render() {
+    return(
+      <InputText>
+        {this.props.text}
+      </InputText>
+    )
+  }
+}
+
+class ChatOptions extends Component {
+  state = {
+    clicked: false
+  }
+
+  //Disable buttons and return on click
+  buttonClicked = event => {
+    //Make sure buttons aren't repeatably clickable
+    if(this.state.clicked === false) {
+      this.props.handleOptions(event)
+      this.setState({clicked: true})
     }
   }
 
   render() {
-    return (
-      <input type="text" onKeyPress={this._handleKeyPress}/>
-        <InputHelpText>
-          Click or Press Enter
-        </InputHelpText>
-      )
+    return(
+      <InputBody>
+        <InputChoices>
+          {this.props.options.map((element,index) => {
+            if(this.state.clicked === false) {
+              if(element.value === -2) {
+                return <DelayLink key={index} to={element.link} delay={1000}>
+                    <InputButton value={element.value}>{element.text}</InputButton>
+                  </DelayLink>
+              }
+              return <InputButton key={index} value={element.value} onClick={this.buttonClicked}>{element.text}</InputButton>
+            } else {
+              return <InputButton key={index} value={element.value}>{element.text}</InputButton>
+            }
+          })}
+        </InputChoices>
+      </InputBody>
+    )
   }
 }
 
+//{this.props.options.map((element,index) => {return <InputButton key={index} value={element.value}>{element.text}</InputButton>})}
 class ChatScreen extends Component {
+  state = {
+    enableNext: true,
+    nextValue: 1,
+    keyIndex: 0,
+    chatIndex: 0,
+    backToLaunch: false
+  }
+
+  chats = this.props.chatStart
+  storeChat = this.props.chats
+
+  handleChatChange = event => {
+    //What is next chat?
+    if(this.storeChat[event.target.value].nextValue === -1) {
+      //If it is a multiple choise
+
+      //Push in the new chat
+      this.chats.push(this.storeChat[event.target.value])
+      //Desable next button
+      this.setState({enableNext: false})
+
+      //Pose bird
+      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
+    } else if(this.storeChat[event.target.value].nextValue === -2) {
+      //Linking back to launch
+
+      //Set the next value and enable button
+      //Push in the new chat
+      this.chats.push(this.storeChat[event.target.value])
+      //Set the next value and enable next
+      this.setState({nextValue: 0})
+      this.setState({enableNext: true})
+
+      //Set back to link
+      this.setState({backToLaunch: true})
+
+      //Pose bird
+      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
+    } else {
+      //Push in the new chat
+      this.chats.push(this.storeChat[event.target.value])
+      //Set the next value and enable next
+      this.setState({nextValue: this.storeChat[event.target.value].nextValue})
+      this.setState({enableNext: true})
+
+      //Pose bird
+      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
+    }
+
+    //Update chat index
+    this.setState({chatIndex: event.target.value})
+  }
+
+  //Keep the chat at bottom
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+  scrollToBottom() {
+    this.el.scrollIntoView({ behavior: 'smooth' });
+  }
+
   render() {
     return(
       <ChatScreenBody> 
         <Pad>
           <Screen>
             <TextBody>
-              <InputText>
-                This is an input text
-              </InputText>
-              <TextBox>
-                This is a text box
-              </TextBox>
-              <InputBody>
-                <InputChoices>
-                  <InputButton>
-                    This is an input button
-                  </InputButton>
-                  <InputButton>
-                    Option numero 2
-                  </InputButton>
-                  <InputButton>
-                    Option numero 3
-                  </InputButton>
-                  <InputButton>
-                    Option numero 4
-                  </InputButton>
-                </InputChoices>
-              </InputBody>
+              {this.chats.map((element, index) => {
+                return <TextBox key={index}>
+                  <ChatScreenText text={element.text}/>
+                  <ChatOptions options={element.options} handleOptions={this.handleChatChange}/>
+                </TextBox>
+              })}
+              <div ref={el => { this.el = el; }} />
             </TextBody>
             <InputHelp>
-              <ChatScreenInput/>
+              <ChatScreenInput backToLaunch={this.state.backToLaunch} enabled={this.state.enableNext} value={this.state.nextValue} handleOnClick={this.handleChatChange}/>
             </InputHelp>
           </Screen>
         </Pad>

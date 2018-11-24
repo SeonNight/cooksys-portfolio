@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+
+import styled from 'styled-components'
+
 import Home from '../Pages/Home/Home'
 import About from '../Pages/About/About'
 import Portfolio from '../Pages/Portfolio/Portfolio'
 import Nav from '../Elements/Nav/Nav'
 import Landing from '../Pages/Landing/Landing'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
-
-import styled from 'styled-components'
 
 
 const BackgroundImage = styled.img `
@@ -59,6 +60,10 @@ class App extends Component {
     this.setState({page: event.target.value})
   };
 
+  handleSwitch = nextPage => {
+    this.setState({page: nextPage})
+  }
+
   render() {
     return(
       <Router>
@@ -71,12 +76,12 @@ class App extends Component {
               <Nav name='Portfolio' onClick={this.handleClick} state={this.state.page} value='3' link='/Portfolio'/>
             </NavButtonDistribution>
           </NavBody>
-            <Route path="/" exact component={Landing}/>
+            <Route path="/" exact component={() => <Landing page={this.state.page} value='0' switchPage={this.handleSwitch}/>}/>
             <AppBody>
               <AppContent>
-                <Route path="/Home" component={Home}/>
-                <Route path="/About" component={About}/>
-                <Route path="/Portfolio" component={Portfolio}/>
+                <Route path="/Home" component={() => <Home page={this.state.page} value='1' switchPage={this.handleSwitch}/>}/>
+                <Route path="/About" component={() => <About page={this.state.page} value='2' switchPage={this.handleSwitch}/>}/>
+                <Route path="/Portfolio" component={() => <Portfolio page={this.state.page} value='3' switchPage={this.handleSwitch}/>}/>
               </AppContent>
             </AppBody>
         </div>

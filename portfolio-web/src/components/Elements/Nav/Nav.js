@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import {Link} from 'react-router-dom'
-
+import React, { Component } from 'react'
 import styled from 'styled-components'
+
+import DelayLink from '../DelayLink/DelayLink'
 
 const NavButton = styled.button`
   display: inline-block;
@@ -41,7 +41,35 @@ const NavButtonActive = styled.button`
     width:30%;
   }
 `
+/*<DelayLink 
+    to="/next_page"
+    delay={800}
+    onDelayStart={() => { / fadeout class / }}
+    onDelayEnd={() => { / fadein class / }} /> */
+class Nav extends Component {
 
+  delayStart(e) {
+  }
+  delayEnd(e) {
+  }
+
+  render() {
+    if(this.props.state === this.props.value) {
+      return(
+        <DelayLink to={this.props.link} delay={2000} onDelayStart={this.delayStart} onDelayEnd={this.delayEnd}>
+          <NavButtonActive onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButtonActive>
+        </DelayLink>
+      )
+    } else {
+      return(
+        <DelayLink to={this.props.link} delay={2000} onDelayStart={this.delayStart} onDelayEnd={this.delayEnd}>
+          <NavButton onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButton>
+        </DelayLink>
+      )
+    }
+  }
+}
+/*
 class Nav extends Component {
 
   render() {
@@ -60,5 +88,5 @@ class Nav extends Component {
     }
   }
 }
-
+*/
 export default Nav;
