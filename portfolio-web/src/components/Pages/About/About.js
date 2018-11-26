@@ -104,7 +104,7 @@ const ResumeImage = styled(ResumeScrollAnimation)`
 `
 
 const ScrollImage = styled.img`
-  width: 100%;
+  width: 125%;
   height: 50px;
   position: relative;
   object-fit: cover;
