@@ -57,23 +57,13 @@ class App extends Component {
   }
 
   handleClick = event => {
-    console.log('Switching Pages: ' + event.target.value)
     this.setState({page: event.target.value})
   };
 
   //For non Nav page change
   handlePageChange = page => {
-    console.log('Switching Pages: ' + page)
     this.setState({page: page})
   };
-
-  componentDidMount(){
-    console.log("Main Mounted")
-  }
-
-  componentDidUpdate() {
-    console.log("Main Update: " + this.state.page)
-  }
 
   render() {
     return(

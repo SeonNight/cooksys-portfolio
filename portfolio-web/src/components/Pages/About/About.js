@@ -1,14 +1,82 @@
 import React, { Component } from 'react';
-
+import posed from "react-pose";
 
 import styled from 'styled-components'
 import ChatBubble from '../../Elements/ChatBubble/ChatBubble'
 import CodeBird from '../../Elements/CodeBird/CodeBird'
+import ProfileCard from '../../Elements/ProfileCard/ProfileCard'
+
+const CodeBirdAnimation = posed.div({
+  start: {
+    top: '-600px'
+  },
+  normal: {
+    top: '0px'
+  },
+  startToNormal:{
+    top: '0px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '-40px',
+        '-20px',
+        to],
+      times: [0, 0.3, 0.6, 1],
+      duration: 1300
+    })
+  },
+  normalToStart:{
+    top: '-600px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '-20px',
+        '0px',
+        to],
+      times: [0, 0.4, 0.7, 1],
+      duration: 1300
+    })
+  }
+})
+
+const CardAnimation = posed.div({
+  start: {
+    top: '-620px'
+  },
+  normal: {
+    top: '-20px'
+  },
+  startToNormal:{
+    top: '-20px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '-60px',
+        '-40px',
+        to],
+      times: [0, 0.3, 0.6, 1],
+      duration: 1300
+    })
+  },
+  normalToStart:{
+    top: '-620px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '-40px',
+        '-20px',
+        to],
+      times: [0, 0.4, 0.7, 1],
+      duration: 1300
+    })
+  }
+})
 
 const CenterBody = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 
 const CodeBirdChat = styled.div`
@@ -30,12 +98,16 @@ const ChatContainer = styled.div`
   left: 20px;
 `
 
-const CodBirdContainer = styled.div`
+const CodBirdContainer = styled(CodeBirdAnimation)`
   position: relative;
   width: 200px;
   height: 180px;
 
   left: 20px;
+`
+
+const CardContainer = styled(CardAnimation)`
+  position: relative;
 `
 
 class About extends Component {
@@ -53,7 +125,7 @@ class About extends Component {
       text: 'Was never that into theater',
       pose: 'inquisitive'
     },{
-      text: 'When I was young I wanted to become an artist',
+      text: 'Anyway, when I was young I wanted to become an artist',
       pose: 'normal'
     },{
       text: 'I would always draw pictures at home and during class',
@@ -104,9 +176,21 @@ class About extends Component {
     chatIndex: 0,
     atEnd: false,
     birdHidden: false,
+    flapping: true,
+    animation: 'start',
+    chatBubbleShow: false
   }
 
-  UpdateChatIndex = event => {
+  constructor (props) {
+    super(props);
+    if(props.page === '2') {
+      this.state.animation = 'start'
+    } else {
+      this.state.animation = 'normal'
+    }
+  }
+
+  UpdateChatIndex = () => {
     if(this.state.chatIndex < this.chats.length-1) {
       this.setState({chatIndex: this.state.chatIndex + 1})
       if((this.state.chatIndex + 2) === this.chats.length) {
@@ -124,6 +208,32 @@ class About extends Component {
     this.setState({birdPose: pose})
   }
 
+  enterAnimation = () => {
+    this.setState({animation: 'startToNormal'})
+    setTimeout(
+      function() {
+          this.setState({flapping: false})
+          this.setState({chatBubbleShow: true})
+      }
+      .bind(this),
+      1000
+    )
+  }
+
+  exitAnimation = () => {
+    this.setState({flapping: true})
+    this.setState({chatBubbleShow: false})
+    this.setState({animation: 'normalToStart'})
+  }
+
+  componentDidMount(){
+    if(this.props.page === '2') {
+      this.enterAnimation()
+    } else {
+      this.exitAnimation()
+    }
+  }
+
   render() {
     return(
       <div>
@@ -131,12 +241,15 @@ class About extends Component {
         <CenterBody>
           <CodeBirdChat>
             <ChatContainer>
-              <ChatBubble atEnd={this.state.atEnd} text={this.chats[this.state.chatIndex].text} updateIndex={this.UpdateChatIndex}/>
+              <ChatBubble hidden={!this.state.chatBubbleShow} atEnd={this.state.atEnd} text={this.chats[this.state.chatIndex].text} updateIndex={this.UpdateChatIndex}/>
             </ChatContainer>
-            <CodBirdContainer>
-              <CodeBird hidden={this.state.birdHidden} pose={this.chats[this.state.chatIndex].pose}/>
+            <CodBirdContainer pose={this.state.animation}>
+              <CodeBird hidden={false} pose={this.chats[this.state.chatIndex].pose} flapping={this.state.flapping}/>
             </CodBirdContainer>
           </CodeBirdChat>
+          <CardContainer pose={this.state.animation}>
+            <ProfileCard/>
+          </CardContainer>
           <div>
             <h2>Resume</h2>
             <ResumeImage src={require("../../../images/resume.png")} alt="resume" />

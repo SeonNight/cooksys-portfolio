@@ -26,7 +26,7 @@ const NavButton = styled.button`
 class Nav extends Component {
   render() {
     return(
-      <DelayLink to={this.props.link} delay={2000}>
+      <DelayLink to={this.props.link} delay={1500}>
         <NavButton value={this.props.value} onClick={this.props.handlePageChange}>{this.props.name}</NavButton>
       </DelayLink>
     )

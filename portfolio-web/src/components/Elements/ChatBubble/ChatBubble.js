@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
+import posed from "react-pose";
 
 import styled, {keyframes} from 'styled-components'
 
-const ChatBubbleBody = styled.button`
+const ChatBodyHide = posed.button({
+  normal: {
+    opacity: 1,
+    transition: { duration: 1000 }
+  },
+  start: {
+    opacity: 0,
+    transition: { duration: 1000 }
+  }
+})
+
+const ChatBubbleBody = styled(ChatBodyHide)`
   background-color: rgb(0, 76, 241);
   border-radius: 5px;
   max-width: 300px;
@@ -54,17 +66,18 @@ const NextText = styled.div`
 //{this.props.options.map((element,index) => {return <InputButton key={index} value={element.value}>{element.text}</InputButton>})}
 class ChatBubble extends Component {
   componentDidMount(){
-    this.nameInput.focus();
+    this.focusButton.focus();
   }
   //Focus back on this button every time
-  componentDidUpdate(prevProps, prevState) {
-    this.nameInput.focus();
+  componentDidUpdate() {
+    this.focusButton.focus();
   }
 
   render() {
     return (
       <ChatBubbleBody
-        ref={(input) => {this.nameInput = input}}
+        pose={this.props.hidden? "start" : "normal" }
+        ref={(input) => {this.focusButton = input}}
         onClick={this.props.updateIndex}>
         <TextBody>
           <Text>

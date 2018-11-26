@@ -253,34 +253,31 @@ class Home extends Component {
   }
 
   exitAnimation = () => {
+    this.setState({flapping: true})
     this.setState({screenOn: false})
     this.setState({chatPose: 'normalToStart'})
+    let link = {
+      '0' : '/',
+      '1' : '/Home',
+      '2' : '/About',
+      '3' : '/Portfolio'
+    }
+    setTimeout(
+      function(link) {
+        this.props.history.push(link)
+      }
+      .bind(this),
+      2000,
+      link[this.props.page]
+    )
   }
 
   componentDidMount(){
     if(this.props.page === '1') {
       this.enterAnimation()
     } else {
-      this.setState({flapping: true})
       this.exitAnimation()
-      let link = {
-        '0' : '/',
-        '1' : '/Home',
-        '2' : '/About',
-        '3' : '/Portfolio'
-      }
-      setTimeout(
-        function(link) {
-          this.props.history.push(link)
-        }
-        .bind(this),
-        2000,
-        link[this.props.page]
-      )
     }
-  }
-
-  componentDidUpdate() {
   }
 
   render() {
