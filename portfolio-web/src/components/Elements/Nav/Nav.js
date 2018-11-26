@@ -10,6 +10,7 @@ const NavButton = styled.button`
   text-align: center;
   text-decoration: none;
   font-size: 16px;
+  width: 210px;
   padding: 15px 32px;
   border: none;
   &:hover {
@@ -18,16 +19,15 @@ const NavButton = styled.button`
   &:active {
     background-color: rgb(206, 255, 249);
   }
-  @media screen (min-width: 650px) {
-    width:30%;
-  }
 `
 
 class Nav extends Component {
   render() {
     return(
       <DelayLink to={this.props.link} delay={1500}>
-        <NavButton value={this.props.value} onClick={this.props.handlePageChange}>{this.props.name}</NavButton>
+        <NavButton value={this.props.value} onClick={this.props.handlePageChange}>
+          {this.props.name}
+        </NavButton>
       </DelayLink>
     )
   }

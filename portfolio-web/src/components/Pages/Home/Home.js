@@ -218,6 +218,8 @@ class Home extends Component {
     pose: 'happy'
   }]
 
+  timeoutArray = []
+
   state = {
     birdPose: 'happy',
     flapping: true,
@@ -241,14 +243,14 @@ class Home extends Component {
 
   enterAnimation = () => {
     this.setState({chatPose: 'startToNormal'})
-    setTimeout(
+    this.timeoutArray.push(setTimeout(
       function() {
           this.setState({flapping: false})
           this.setState({screenOn: true})
       }
       .bind(this),
       2000
-    )
+    ))
     this.setState({open: true})
   }
 
@@ -262,14 +264,14 @@ class Home extends Component {
       '2' : '/About',
       '3' : '/Portfolio'
     }
-    setTimeout(
+    this.timeoutArray.push(setTimeout(
       function(link) {
         this.props.history.push(link)
       }
       .bind(this),
       2000,
       link[this.props.page]
-    )
+    ))
   }
 
   componentDidMount(){
@@ -278,6 +280,10 @@ class Home extends Component {
     } else {
       this.exitAnimation()
     }
+  }
+
+  componentWillUnmount() {
+    this.timeoutArray.forEach(clearTimeout);
   }
 
   render() {

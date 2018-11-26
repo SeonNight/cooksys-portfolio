@@ -8,6 +8,7 @@ import About from '../Pages/About/About'
 import Portfolio from '../Pages/Portfolio/Portfolio'
 import Nav from '../Elements/Nav/Nav'
 import Landing from '../Pages/Landing/Landing'
+import ActiveRoute from './ActiveRoute'
 
 
 const BackgroundImage = styled.img `
@@ -45,15 +46,16 @@ const NavBody = styled.div`
   z-index: 1;
 `
 const NavButtonDistribution = styled.div`
-  width:650px;
+  width:630px;
   display: flex;
-  justify-content: left;
+  justify-content: center;
 `
 
 class App extends Component {
 
   state = {
-    page: '0'
+    page: '0',
+    pageChange: false
   }
 
   handleClick = event => {
@@ -65,13 +67,17 @@ class App extends Component {
     this.setState({page: page})
   };
 
+  handlePageChangeFlag = () => {
+    this.setState({pageChange: true})
+  }
+
   render() {
     return(
       <Router>
         <div>
           <BackgroundImage src={require("../../images/bird-house-inside.png")} alt="link"/>
           <NavBody>
-            <NavButtonDistribution>
+            <NavButtonDistribution handlePageChange={this.handlePageChange}>
               <Nav name='Home' value='1' link='/Home' handlePageChange={this.handleClick} />
               <Nav name='About Me' value='2' link='/About' handlePageChange={this.handleClick} />
               <Nav name='Portfolio' value='3' link='/Portfolio' handlePageChange={this.handleClick} />
@@ -80,9 +86,11 @@ class App extends Component {
             <Route path="/" exact component={() => <Landing page={this.state.page} value='0' handlePageChange={this.handlePageChange} />}/>
             <AppBody>
               <AppContent>
-                <Route path="/Home" component={() => <Home page={this.state.page} value='1' handlePageChange={this.handleClick} />}/>
-                <Route path="/About" component={() => <About page={this.state.page} value='2' handlePageChange={this.handlePageChange} />}/>
-                <Route path="/Portfolio" component={() => <Portfolio page={this.state.page} value='3' handlePageChange={this.handlePageChange} />}/>
+                <ActiveRoute pageChange={this.state.pageChange} page={this.state.page} handlePageChangeFlag={this.handlePageChangeFlag} handlePageChange={this.handlePageChange}>
+                  <Route path="/Home" component={() => <Home page={this.state.page} value='1' handlePageChange={this.handleClick} />}/>
+                  <Route path="/About" component={() => <About page={this.state.page} value='2' handlePageChange={this.handlePageChange} />}/>
+                  <Route path="/Portfolio" component={() => <Portfolio page={this.state.page} value='3' handlePageChange={this.handlePageChange} />}/>
+                </ActiveRoute>
               </AppContent>
             </AppBody>
         </div>
@@ -92,6 +100,11 @@ class App extends Component {
 }
 //Get rid of exact after testing
 /*
+              <AppContent>
+                <Route path="/Home" component={() => <Home page={this.state.page} value='1' handlePageChange={this.handleClick} />}/>
+                <Route path="/About" component={() => <About page={this.state.page} value='2' handlePageChange={this.handlePageChange} />}/>
+                <Route path="/Portfolio" component={() => <Portfolio page={this.state.page} value='3' handlePageChange={this.handlePageChange} />}/>
+              </AppContent>
 <Switch>
   <Route path="/" exact component={Landing}/>
   <AppBody>

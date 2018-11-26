@@ -72,6 +72,17 @@ const CardAnimation = posed.div({
   }
 })
 
+const ResumeScrollAnimation = posed.img({
+  roll: {
+    height: '0px',
+    transition: { duration: 500 }
+  },
+  unroll: {
+    height: '100%',
+    transition: { duration: 500 }
+  }
+})
+
 const CenterBody = styled.div`
   display: flex;
   flex-direction: column;
@@ -86,10 +97,17 @@ const CodeBirdChat = styled.div`
   flex-direction: row;
 `
 
-const ResumeImage = styled.img`
+const ResumeImage = styled(ResumeScrollAnimation)`
   width: 100%;
   margin: auto;
-  object-fit: content;
+  object-fit: cover;
+`
+
+const ScrollImage = styled.img`
+  width: 100%;
+  height: 50px;
+  position: relative;
+  object-fit: cover;
 `
 
 const ChatContainer = styled.div`
@@ -143,10 +161,10 @@ class About extends Component {
       text: 'Did you know, graphic calculators can be programmed?',
       pose: 'inquisitive'
     },{
-      text: 'I didn\' really understand it at first',
+      text: 'I didn\'t really understand it at first',
       pose: 'normal'
     },{
-      text: 'But there was this little bit of code that calculated the Quadratic formula',
+      text: 'But there was this little bit of code already there that calculated the Quadratic formula',
       pose: 'normal'
     },{
       text: 'It took me a while, but I made my first program',
@@ -158,6 +176,9 @@ class About extends Component {
       text: 'I had made more *ahem* "Useful" programs since then',
       pose: 'questioning'
     },{
+      text: 'Take that as you will',
+      pose: 'inquisitive'
+    },{
       text: 'But because of this incident',
       pose: 'normal'
     },{
@@ -168,17 +189,19 @@ class About extends Component {
       pose: 'normal'
     },{
       text: 'Just because I learned that I loved Computer Science doesn\'t mean I lost my passion for art',
-      pose: 'happy'
+      pose: 'inquisitive'
     }
   ]
+
+  timeoutArray = []
 
   state = {
     chatIndex: 0,
     atEnd: false,
-    birdHidden: false,
     flapping: true,
     animation: 'start',
-    chatBubbleShow: false
+    chatBubbleShow: false,
+    resumeScroll: 'roll'
   }
 
   constructor (props) {
@@ -187,6 +210,14 @@ class About extends Component {
       this.state.animation = 'start'
     } else {
       this.state.animation = 'normal'
+    }
+  }
+
+  UpdateResumeScroll = () => {
+    if(this.state.resumeScroll === 'roll') {
+      this.setState({resumeScroll: 'unroll'})
+    } else {
+      this.setState({resumeScroll: 'roll'})
     }
   }
 
@@ -210,14 +241,14 @@ class About extends Component {
 
   enterAnimation = () => {
     this.setState({animation: 'startToNormal'})
-    setTimeout(
+    this.timeoutArray.push(setTimeout(
       function() {
           this.setState({flapping: false})
           this.setState({chatBubbleShow: true})
       }
       .bind(this),
       1000
-    )
+    ))
   }
 
   exitAnimation = () => {
@@ -232,6 +263,25 @@ class About extends Component {
     } else {
       this.exitAnimation()
     }
+    this.scrollToBottom();
+  }
+
+  componentWillUnmount() {
+    this.timeoutArray.forEach(clearTimeout);
+  }
+
+  componentDidUpdate() {
+    this.timeoutArray.push(setTimeout(
+      function() {
+      this.scrollToBottom();
+        }
+        .bind(this),
+        500
+    ))
+  }
+
+  scrollToBottom() {
+    this.el.scrollIntoView({ behavior: 'smooth' })
   }
 
   render() {
@@ -250,10 +300,8 @@ class About extends Component {
           <CardContainer pose={this.state.animation}>
             <ProfileCard/>
           </CardContainer>
-          <div>
-            <h2>Resume</h2>
-            <ResumeImage src={require("../../../images/resume.png")} alt="resume" />
-          </div>
+          <ScrollImage ref={el => { this.el = el; }} onClick={this.UpdateResumeScroll} src={require("../../../images/scroll.png")}/>
+          <ResumeImage pose={this.state.resumeScroll} onClick={this.UpdateResumeScroll} src={require("../../../images/resume.png")} alt="resume" />
         </CenterBody>
       </div>)
   }

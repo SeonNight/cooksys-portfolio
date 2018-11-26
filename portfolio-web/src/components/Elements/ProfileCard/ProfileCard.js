@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import faceImage from '../../../images/profile-icon.png';
 
 const ProfileCardBody = styled.div`
-  width: 380px;
+  width: 420px;
   height: 230px;
   background-color: white;
   border: 1px solid black;
@@ -34,8 +34,9 @@ const ProfileImage = styled.img`
 `
 
 const ProfileText = styled.div`
-  color: grey;
+  color: rgb(85, 85, 85);
   padding: 10px;
+  padding-top: 0px;
 `
 
 const StatText = styled.p`
@@ -54,17 +55,20 @@ class ProfileCard extends Component {
     return(
       <ProfileCardBody>
         <ProfileTop>
-          <ProfileImage src={faceImage} alt='Human Face'/>
+          <div>
+            <ProfileImage src={faceImage} alt='Human Face'/>
+            <ProfileText>ID: 43110</ProfileText>
+          </div>
           <ProfileStatsList>
             <StatText><StatBold>Name:</StatBold> Seong Kim</StatText>
-            <StatText><StatBold>Age:</StatBold> 154 dog years old</StatText>
-            <StatText><StatBold>Height:</StatBold> 6 Jumps</StatText>
-            <StatText> <StatBold>Weight:</StatBold> 10 unicorns </StatText>
+            <StatText><StatBold>Age:</StatBold> 154 dog years</StatText>
+            <StatText><StatBold>Height:</StatBold> 4.5 Jumps</StatText>
+            <StatText> <StatBold>Weight:</StatBold> 0.12 unicorns</StatText>
             <StatText><StatBold>Favorite Food:</StatBold> Noodles</StatText>
           </ProfileStatsList>
         </ProfileTop>
         <ProfileText>
-          <p>A lover of art and puzzles. Don't leave candy around this creature unless you want them disappear mysteriously.</p>
+          <p>A lover of art and puzzles. Don't leave candy around this creature unless you want them to mysteriously disappear.</p>
         </ProfileText>
       </ProfileCardBody>
     )
