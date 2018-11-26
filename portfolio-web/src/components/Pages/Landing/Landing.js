@@ -97,11 +97,9 @@ const HangingBird = styled.img`
   z-index: 2;
 `
 
-
+//Landing page
 class Landing extends Component {
   state = {
-    closing: false,
-
     ringed: false,
     moveImage: false,
     moveBlind: false,
@@ -112,6 +110,7 @@ class Landing extends Component {
     ]
   }
 
+  //If clicked ring bell and activate page change
   bellClicked = () => {
     //If first time rining start the ring aniamtion
     if(!this.state.ringed) {
@@ -119,6 +118,7 @@ class Landing extends Component {
     }
   }
 
+  //Depending if it is leaving or entering page activate the correct animation
   componentDidMount() {
     if(this.props.page !== '0') {
       this.setState({ringed: true})

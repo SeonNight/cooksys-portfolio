@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import posed from "react-pose";
-
 import styled from 'styled-components'
+
 import ChatBubble from '../../Elements/ChatBubble/ChatBubble'
 import CodeBird from '../../Elements/CodeBird/CodeBird'
 import ProfileCard from '../../Elements/ProfileCard/ProfileCard'
@@ -128,7 +128,9 @@ const CardContainer = styled(CardAnimation)`
   position: relative;
 `
 
+//About me page
 class About extends Component {
+  //Chat information
   chats = [
     {
       text: 'My name is Seong Kim',
@@ -193,8 +195,10 @@ class About extends Component {
     }
   ]
 
+  //For clearing timeouts
   timeoutArray = []
 
+  //Saved states
   state = {
     chatIndex: 0,
     atEnd: false,
@@ -204,6 +208,7 @@ class About extends Component {
     resumeScroll: 'roll'
   }
 
+  //Set state depending on which page we are currently on
   constructor (props) {
     super(props);
     if(props.page === '2') {
@@ -213,6 +218,12 @@ class About extends Component {
     }
   }
 
+  //Make sure the scrool is in view
+  scrollToBottom() {
+    this.el.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  //Update the scroll (resume) state
   UpdateResumeScroll = () => {
     if(this.state.resumeScroll === 'roll') {
       this.setState({resumeScroll: 'unroll'})
@@ -221,6 +232,7 @@ class About extends Component {
     }
   }
 
+  //Update which place the chat is currently in
   UpdateChatIndex = () => {
     if(this.state.chatIndex < this.chats.length-1) {
       this.setState({chatIndex: this.state.chatIndex + 1})
@@ -234,11 +246,12 @@ class About extends Component {
     }
   }
 
-  //Why does it have to be in this format?
+  //Update bird pose
   UpdateBirdPose = pose => {
     this.setState({birdPose: pose})
   }
 
+  //Animation for entering page
   enterAnimation = () => {
     this.setState({animation: 'startToNormal'})
     this.timeoutArray.push(setTimeout(
@@ -251,12 +264,14 @@ class About extends Component {
     ))
   }
 
+  //Animation for exiting page
   exitAnimation = () => {
     this.setState({flapping: true})
     this.setState({chatBubbleShow: false})
     this.setState({animation: 'normalToStart'})
   }
 
+  //Depending if it is leaving or entering page activate the correct animation
   componentDidMount(){
     if(this.props.page === '2') {
       this.enterAnimation()
@@ -266,6 +281,7 @@ class About extends Component {
     this.scrollToBottom();
   }
 
+  //Clear any timeouts if unmounted
   componentWillUnmount() {
     this.timeoutArray.forEach(clearTimeout);
   }
@@ -278,10 +294,6 @@ class About extends Component {
         .bind(this),
         500
     ))
-  }
-
-  scrollToBottom() {
-    this.el.scrollIntoView({ behavior: 'smooth' })
   }
 
   render() {

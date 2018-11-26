@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import styled, {keyframes} from 'styled-components'
 import posed from "react-pose";
 
@@ -137,16 +136,18 @@ const InputHelpText = styled.button`
   animation: ${InputHelpTextIdleAnimation} 1.8s linear infinite;
 `
 
+//For the main button on bottom of screen
 class ChatScreenInput extends React.Component {
+  //Focus back on this button every time
   componentDidMount(){
     this.nameInput.focus();
   }
-  //Focus back on this button every time
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
     this.nameInput.focus();
   }
 
   render() {
+    //Detect when going back to launch screen
     if(!this.props.backToLaunch) {
       return (
           <InputHelpText
@@ -167,6 +168,7 @@ class ChatScreenInput extends React.Component {
   }
 }
 
+//Chat bubbles in screen
 class ChatScreenText extends Component {
   render() {
     return(
@@ -177,6 +179,7 @@ class ChatScreenText extends Component {
   }
 }
 
+//Button options in chat
 class ChatOptions extends Component {
   state = {
     clicked: false
@@ -191,6 +194,7 @@ class ChatOptions extends Component {
     }
   }
 
+  //If linked button is pressed use handle page to send info
   changePage = (event) => {
     this.props.handlePageChange(event)
   }
@@ -215,7 +219,7 @@ class ChatOptions extends Component {
   }
 }
 
-//{this.props.options.map((element,index) => {return <InputButton key={index} value={element.value}>{element.text}</InputButton>})}
+//The ChatScreen
 class ChatScreen extends Component {
   state = {
     enableNext: true,
@@ -224,60 +228,50 @@ class ChatScreen extends Component {
     backToLaunch: false
   }
 
+  //Initialize chat property
   chats = this.props.chatStart
   storeChat = this.props.chats
 
+  //Handle chatScreen
   handleChatChange = event => {
     //What is next chat?
     if(this.storeChat[event.target.value].nextValue === -1) {
-      //If it is a multiple choise
-
-      //Push in the new chat
+      //Push in the new chat and desable main button
       this.chats.push(this.storeChat[event.target.value])
-      //Desable next button
       this.setState({enableNext: false})
-
-      //Pose bird
-      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
     } else if(this.storeChat[event.target.value].nextValue === -2) {
       //Linking back to launch
 
       //Set the next value and enable button
-      //Push in the new chat
+      //Push in the new chat, set next value to zero and enable main button
+      //so it goes back to launch
       this.chats.push(this.storeChat[event.target.value])
-      //Set the next value and enable next
       this.setState({nextValue: 0})
       this.setState({enableNext: true})
-
-      //Set back to link
       this.setState({backToLaunch: true})
-
-      //Pose bird
-      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
     } else {
-      //Push in the new chat
+      //Push in the new chat, set next value and enable main button
       this.chats.push(this.storeChat[event.target.value])
-      //Set the next value and enable next
       this.setState({nextValue: this.storeChat[event.target.value].nextValue})
       this.setState({enableNext: true})
-
-      //Pose bird
-      this.props.updateBirdPose(this.storeChat[event.target.value].pose);
     }
+
+    //Pose bird
+    this.props.updateBirdPose(this.storeChat[event.target.value].pose);
 
     //Update chat index
     this.setState({chatIndex: event.target.value})
   }
 
-  //Keep the chat at bottom
+  //Keep the chat focused at bottom of screen
+  scrollToBottom() {
+    this.el.scrollIntoView({ behavior: 'smooth' });
+  }
   componentDidMount() {
     this.scrollToBottom();
   }
   componentDidUpdate() {
     this.scrollToBottom();
-  }
-  scrollToBottom() {
-    this.el.scrollIntoView({ behavior: 'smooth' });
   }
 
   render() {

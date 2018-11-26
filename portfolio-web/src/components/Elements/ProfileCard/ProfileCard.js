@@ -49,6 +49,7 @@ const StatBold = styled.span`
   padding: 0;
 `
 
+//Profile Card with basic info
 class ProfileCard extends Component {
 
   render() {
@@ -61,14 +62,15 @@ class ProfileCard extends Component {
           </div>
           <ProfileStatsList>
             <StatText><StatBold>Name:</StatBold> Seong Kim</StatText>
+            <StatText><StatBold>Type:</StatBold> Asian</StatText>
             <StatText><StatBold>Age:</StatBold> 154 dog years</StatText>
-            <StatText><StatBold>Height:</StatBold> 4.5 Jumps</StatText>
-            <StatText> <StatBold>Weight:</StatBold> 0.12 unicorns</StatText>
+            <StatText><StatBold>Height:</StatBold> 4.5 jumps</StatText>
+            <StatText> <StatBold>Weight:</StatBold> 0.08 unicorns</StatText>
             <StatText><StatBold>Favorite Food:</StatBold> Noodles</StatText>
           </ProfileStatsList>
         </ProfileTop>
         <ProfileText>
-          <p>A lover of art and puzzles. Don't leave candy around this creature unless you want them to mysteriously disappear.</p>
+          <p>A lover of art and puzzles. Don't leave candy around this creature as they always seem to mysteriously disappear.</p>
         </ProfileText>
       </ProfileCardBody>
     )

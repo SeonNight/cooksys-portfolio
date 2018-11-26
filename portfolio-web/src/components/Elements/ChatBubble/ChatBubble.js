@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import posed from "react-pose";
-
 import styled, {keyframes} from 'styled-components'
 
 const ChatBodyHide = posed.button({
@@ -63,12 +62,12 @@ const NextText = styled.div`
   animation: ${NextTextIdleAnimation} 1.8s linear infinite;
 `
 
-//{this.props.options.map((element,index) => {return <InputButton key={index} value={element.value}>{element.text}</InputButton>})}
 class ChatBubble extends Component {
+
+  //Focus back on this button every time
   componentDidMount(){
     this.focusButton.focus();
   }
-  //Focus back on this button every time
   componentDidUpdate() {
     this.focusButton.focus();
   }

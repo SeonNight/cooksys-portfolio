@@ -21,6 +21,7 @@ const NavButton = styled.button`
   }
 `
 
+//Just a button for links
 class Nav extends Component {
   render() {
     return(
@@ -32,23 +33,5 @@ class Nav extends Component {
     )
   }
 }
-/*
-class Nav extends Component {
 
-    if(this.props.state === this.props.value) {
-      return(
-        <DelayLink to={this.props.link} delay={2000}>
-          <NavButtonActive onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButtonActive>
-        </DelayLink>
-      )
-    } else {
-      return(
-        <DelayLink to={this.props.link} delay={2000}>
-          <NavButton onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButton>
-        </DelayLink>
-      )
-    }
-  }
-}
-*/
 export default Nav;

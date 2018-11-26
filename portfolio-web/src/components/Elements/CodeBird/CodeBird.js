@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import posed from "react-pose";
-
 import styled, {keyframes} from 'styled-components'
 
 import angry from '../../../images/code-bird/code-bird-angry.png';
@@ -117,6 +116,7 @@ class CodeBird extends Component {
     hidden: true
   }
 
+  //For different poses give different images
   WhichPose(id) {
     switch(id) {
       default:

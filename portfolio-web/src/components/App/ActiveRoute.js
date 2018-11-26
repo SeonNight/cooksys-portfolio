@@ -4,6 +4,8 @@ import { withRouter} from 'react-router-dom'
 /*To make sure the page value is the correct value
   during a reload or refresh */
 class ActiveRoute extends Component {
+
+  //Find out which page we are in
   handlePageChange = () => {
     //Make sure it doesn't redo after first reload
     if(!this.props.pageChange) {
@@ -23,16 +25,17 @@ class ActiveRoute extends Component {
           break;
       }
       if(this.props.page !== value) {
-        this.props.handlePageChange(value)
-        this.props.handlePageChangeFlag()
+        this.props.handlePageChangeFlag(value)
       }
     }
   }
   
+  //Once things are loaded handle the page change
   componentDidMount(){
     this.handlePageChange()
   }
 
+  //Does pretty much nothing
   render() {
     return (this.props.children)
   }

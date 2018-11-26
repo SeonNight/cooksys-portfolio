@@ -61,6 +61,7 @@ const GitImg = styled.img`
   width: 20px;
 `
 
+//Card of porfoliothingy that opens on new tab
 class PortfolioCard extends Component {
   getImage = (id) => {
     switch(id) {
@@ -78,7 +79,7 @@ class PortfolioCard extends Component {
   render() {
     return (
       <Card>
-        <GitLink href={this.props.link}>
+        <GitLink href={this.props.link} target="_blank">
           <Content>
             <h1>{this.props.name}</h1>
             <PreviewImage src={this.getImage(this.props.imgLink)} alt="snapshot of the project"/>

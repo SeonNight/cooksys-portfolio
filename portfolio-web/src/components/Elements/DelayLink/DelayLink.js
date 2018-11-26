@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
+//Code I found that delays links so I can animate before link finishes
 /**
  * Wraps the React Router Link component and creates a delay after the link is clicked.
  */
@@ -81,10 +82,3 @@ export default class DelayLink extends React.Component {
     );
   }
 }
-
-/*<DelayLink 
-    to="/next_page"
-    delay={800}
-    onDelayStart={() => { / fadeout class / }}
-    onDelayEnd={() => { / fadein class / }} />
-*/

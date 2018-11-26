@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 import posed from "react-pose";
 import styled from 'styled-components'
+
 import ChatScreen from '../../Elements/ChatScreen/ChatScreen'
 import CodeBird from '../../Elements/CodeBird/CodeBird'
 
@@ -92,6 +93,7 @@ const CodBirdContainer = styled(CodeBirdAnimation)`
   left: 400px;
 `
 
+//Home page
 class Home extends Component {
   chats = [
     {
@@ -227,6 +229,7 @@ class Home extends Component {
     screenOn: false
   }
 
+  //Initialize animation pose
   constructor (props) {
     super(props);
     if(props.page === '1') {
@@ -236,11 +239,12 @@ class Home extends Component {
     }
   }
 
-  //Why does it have to be in this format?
+  //Update bird pose
   UpdateBirdPose = pose => {
     this.setState({birdPose: pose})
   }
 
+  //Animation for entering page
   enterAnimation = () => {
     this.setState({chatPose: 'startToNormal'})
     this.timeoutArray.push(setTimeout(
@@ -254,6 +258,7 @@ class Home extends Component {
     this.setState({open: true})
   }
 
+  //Animation for exiting page
   exitAnimation = () => {
     this.setState({flapping: true})
     this.setState({screenOn: false})
@@ -274,6 +279,7 @@ class Home extends Component {
     ))
   }
 
+  //Depending if it is leaving or entering page activate the correct animation
   componentDidMount(){
     if(this.props.page === '1') {
       this.enterAnimation()
@@ -282,6 +288,7 @@ class Home extends Component {
     }
   }
 
+  //Clear any timeouts if unmounted
   componentWillUnmount() {
     this.timeoutArray.forEach(clearTimeout);
   }
