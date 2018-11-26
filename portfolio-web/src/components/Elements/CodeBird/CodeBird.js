@@ -143,7 +143,7 @@ class CodeBird extends Component {
           <CodeBirdWingImageBody>
             <CodeBirdFlap src={wing} alt="bird wing"/>
           </CodeBirdWingImageBody>
-          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="snapshot of the project"/>
+          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="codebird"/>
         </CodeBirdContainer>
       )
     } else {
@@ -152,7 +152,7 @@ class CodeBird extends Component {
           <CodeBirdWingImageBody>
             <CodeBirdWingImage src={wing} alt="bird wing"/>
           </CodeBirdWingImageBody>
-          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="snapshot of the project"/>
+          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="codebird"/>
         </CodeBirdContainer>
       )
     }
