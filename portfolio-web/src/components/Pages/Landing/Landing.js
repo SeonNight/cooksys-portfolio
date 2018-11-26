@@ -1,40 +1,67 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
-
 import styled, {keyframes} from 'styled-components'
 import posed from "react-pose";
 
 const Blinds = posed.div({
-  close: {
-    top: 0,
-    transition: {
-      duration: 500,
-      ease: 'easeIn'
-    }
+  start: {
+    top: '-1000px'
   },
-  open: {
-    top: -1000,
-    transition: {
-      duration: 700,
-      ease: 'easeIn'
-    }
+  normal: {
+    top: '0px'
+  },
+  startToNormal:{
+    top: '0px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '-1000px',
+        to],
+      times: [0, 0.5, 1],
+      duration: 2200
+    })
+  },
+  normalToStart:{
+    top: '-1000px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '0px',
+        to],
+      times: [0, 0.5, 1],
+      duration: 1300
+    })
   }
 })
 
 const ImageMove = posed.div({
-  normal: {
-    top: 0,
-    transition: {
-      duration: 500,
-      ease: 'easeIn'
-    }
+  start: {
+    top: '50px'
   },
-  trans: {
-    top: 50,
-    transition: {
-      duration: 500,
-      ease: 'easeIn'
-    }
+  normal: {
+    top: '0px'
+  },
+  startToNormal:{
+    top: '0px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '50px',
+        to],
+      times: [0, 0.3, 1],
+      duration: 2200
+    })
+  },
+  normalToStart:{
+    top: '50px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '50px',
+        to],
+      times: [0, 0.7, 1],
+      duration: 1300
+    })
   }
 })
 
@@ -100,52 +127,82 @@ const HangingBird = styled.img`
 //Landing page
 class Landing extends Component {
   state = {
-    ringed: false,
-    moveImage: false,
-    moveBlind: false,
-    animationIndex: 0,
-    animationQueue: [
-      {moveImage: true},
-      {moveBlind: true}
-    ]
+    animation: 'start',
+    moveImage: false
   }
+
+  //For clearing timeouts
+  timeoutArray = []
+
+  //Set state depending on which page we are currently on
+  constructor (props) {
+    super(props);
+    //IF starting on landing
+    if(props.page === props.prev && props.page === '0') {
+      this.state.animation = 'normal'
+    } else if(props.prev === '0') {
+      this.state.animation = 'normal'
+    } else {
+    //Screw you
+      this.state.animation = 'start'
+    }
+  }
+
 
   //If clicked ring bell and activate page change
   bellClicked = () => {
-    //If first time rining start the ring aniamtion
-    if(!this.state.ringed) {
+    //If first time rining start 
+    if(this.props.page === '0') {
       this.props.handlePageChange('1')
     }
   }
 
+  //Animation for entering page
+  enterAnimation = () => {
+    this.setState({animation: 'startToNormal'})
+    this.setState({moveImage: true})
+    setTimeout(
+      function() {
+        this.setState({moveImage: false})
+      }
+      .bind(this),
+      2000
+    )
+  }
+
+  //Animation for exiting page
+  exitAnimation = () => {
+    this.setState({animation: 'normalToStart'})
+    this.setState({moveImage: true})
+    setTimeout(
+      function() {
+        this.props.history.push('/Home')
+      }
+      .bind(this),
+      2000
+    )
+  }
+
   //Depending if it is leaving or entering page activate the correct animation
-  componentDidMount() {
-    if(this.props.page !== '0') {
-      this.setState({ringed: true})
-      setTimeout(
-        function() {
-          this.props.history.push('/Home')
-        }
-        .bind(this),
-        2000
-      )
+  componentDidMount(){
+    if(this.props.prev === '0' && this.props.page !== '0') {
+      //Switching pages from landing
+      this.exitAnimation()
+    } else if(this.props.prev !== '0' && this.props.page === '0') {
+      //From home to landing
+      this.enterAnimation()
     }
   }
 
-  //Make sure verything is done in sequence
-  componentDidUpdate() {
-    if(this.state.ringed) {
-      if(this.state.animationIndex < this.state.animationQueue.length) {
-        this.setState(this.state.animationQueue[this.state.animationIndex])
-        this.setState({animationIndex: this.state.animationIndex + 1})
-      }
-    }
+  //Clear any timeouts if unmounted
+  componentWillUnmount() {
+    this.timeoutArray.forEach(clearTimeout);
   }
 
   render() {
     return(
-      <LandingBody id='LandingBody' pose={this.state.moveBlind ? 'open' : 'close'} ref={el => { this.el = el; }} >
-        <ImageContainer pose={this.state.moveImage ? 'trans' : 'normal'}>
+      <LandingBody id='LandingBody' pose={this.state.animation} ref={el => { this.el = el; }} >
+        <ImageContainer pose={this.state.animation}>
           <BellBody>
             <BellImg value='1' onClick={this.bellClicked} src={require('../../../images/bell.png')}/>
           </BellBody>
@@ -156,6 +213,7 @@ class Landing extends Component {
     )
   }
 }
+//<ImageContainer pose={this.state.animation}>
 
 //<LandingBody id='LandingBody'pose={opened ? 'open' : 'closed'}  className={opened ? 'LandingOpen' : 'LandingClosed'}>
 export default withRouter(Landing);

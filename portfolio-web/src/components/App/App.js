@@ -53,6 +53,7 @@ const NavButtonDistribution = styled.div`
 class App extends Component {
 
   state = {
+    prev: '0',
     page: '0',
     refreshed: false
   }
@@ -60,6 +61,7 @@ class App extends Component {
 
   //Handling page change by page value
   handlePageChangeValue = page => {
+    this.setState({prev: this.state.page})
     this.setState({page: page})
   };
 
@@ -72,6 +74,7 @@ class App extends Component {
   handlePageChangeFlag = page => {
     this.setState({refreshed: true})
     this.setState({page: page})
+    this.setState({prev: page})
   }
 
   render() {
@@ -86,7 +89,7 @@ class App extends Component {
               <Nav name='Portfolio' value='3' link='/Portfolio' handlePageChange={this.handlePageChangeEvent} />
             </NavButtonDistribution>
           </NavBody>
-          <Route path="/" exact component={() => <Landing page={this.state.page} value='0' handlePageChange={this.handlePageChangeValue} />}/>
+          <Route path="/" component={() => <Landing page={this.state.page} prev={this.state.prev} value='0' handlePageChange={this.handlePageChangeValue} />}/>
           <AppBody>
             <AppContent>
               <ActiveRoute refreshed={this.state.refreshed} page={this.state.page} handlePageChangeFlag={this.handlePageChangeFlag}>
