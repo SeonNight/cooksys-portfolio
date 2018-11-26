@@ -75,6 +75,30 @@ const CodeBirdWingIdle = keyframes`
   }
 `
 
+const CodeBirdFlapAnimation = keyframes`
+  0%{
+    transform: translate(-20px, -30px) rotate(-90deg) scaleX(1);
+  }
+  50%{
+    transform: translate(-20px, 30px) rotate(-90deg) scaleX(-1);
+  }
+  100%{
+    transform: translate(-20px, -30px) rotate(-90deg) scaleX(1);
+  }
+`
+
+const CodeBirdFlap = styled.img`
+  position: absolute;
+  top: 40%;
+
+  animation: ${CodeBirdFlapAnimation} .3s linear infinite;
+  z-index: 1;
+
+  width: 55%;
+
+  perspective: 1000px;
+`
+
 const CodeBirdWingImage = styled.img`
   position: absolute;
   top: 40%;
@@ -83,6 +107,8 @@ const CodeBirdWingImage = styled.img`
   z-index: 1;
 
   width: 50%;
+
+  perspective: 1000px;
 `
 
 class CodeBird extends Component {
@@ -111,14 +137,25 @@ class CodeBird extends Component {
   }
 
   render() {
-    return(
-      <CodeBirdContainer pose={this.props.hidden? 'hidden' : 'show'}>
-        <CodeBirdWingImageBody>
-          <CodeBirdWingImage src={wing} alt="bird wing"/>
-        </CodeBirdWingImageBody>
-        <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="snapshot of the project"/>
-      </CodeBirdContainer>
-    )
+    if(this.props.flapping) {
+      return(
+        <CodeBirdContainer pose={this.props.hidden? 'hidden' : 'show'}>
+          <CodeBirdWingImageBody>
+            <CodeBirdFlap src={wing} alt="bird wing"/>
+          </CodeBirdWingImageBody>
+          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="snapshot of the project"/>
+        </CodeBirdContainer>
+      )
+    } else {
+      return(
+        <CodeBirdContainer pose={this.props.hidden? 'hidden' : 'show'}>
+          <CodeBirdWingImageBody>
+            <CodeBirdWingImage src={wing} alt="bird wing"/>
+          </CodeBirdWingImageBody>
+          <CodeBirdImage src={this.WhichPose(this.props.pose)} alt="snapshot of the project"/>
+        </CodeBirdContainer>
+      )
+    }
   }
 }
 

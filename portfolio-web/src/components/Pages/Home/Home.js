@@ -1,7 +1,70 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
+import posed from "react-pose";
 import styled from 'styled-components'
 import ChatScreen from '../../Elements/ChatScreen/ChatScreen'
 import CodeBird from '../../Elements/CodeBird/CodeBird'
+
+
+const ChatScreenAnimation = posed.div({
+  start: {
+    top: '-500px'
+  },
+  normal: {
+    top: '10px'
+  },
+  startToNormal: {
+    top: '10px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from, 100, -50, to],
+      times: [0, 0.4, 0.7, 1],
+      duration: 1000
+    })
+  },
+  normalToStart: {
+    top: '-500px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from, -50, 100, to],
+      times: [0, 0.3, 0.6, 1],
+      duration: 1000
+    })
+  }
+})
+
+const CodeBirdAnimation = posed.div({
+  start: {
+    bottom: '700px'
+  },
+  normal: {
+    bottom: '80px'
+  },
+  startToNormal:{
+    bottom: '80px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '100px',
+        '90px',
+        to],
+      times: [0, 0.3, 0.6, 1],
+      duration: 1300
+    })
+  },
+  normalToStart:{
+    bottom: '700px',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from,
+        '90px',
+        '80px',
+        to],
+      times: [0, 0.4, 0.7, 1],
+      duration: 1300
+    })
+  }
+})
 
 const HomeBody = styled.div`
   width: 100%;
@@ -10,7 +73,7 @@ const ChatBody = styled.div`
   position: aboslute;
 `
 
-const ChatContainer = styled.div`
+const ChatContainer = styled(ChatScreenAnimation)`
   position: relative;
   right: 50px;
 `
@@ -19,7 +82,7 @@ const CodeBirdBody = styled.div`
   position: absolute;
 `
 
-const CodBirdContainer = styled.div`
+const CodBirdContainer = styled(CodeBirdAnimation)`
   width: 150px;
   height: 130px;
   position: relative;
@@ -30,21 +93,24 @@ const CodBirdContainer = styled.div`
 `
 
 class Home extends Component {
-  chat = [{
-    text: 'Hey there!',
-    options: [],
-    nextValue: 1,
-    pose: 'happy'
-  },{
+  chats = [
+    {
+      text: 'Hey there!',
+      options: [],
+      nextValue: 1,
+      pose: 'happy'
+    },{
     text: 'How can I help you?',
     options: [{
       text: 'About you',
       value: -2,
-      link: '/About'
+      link: '/About',
+      page: '2'
     },{
       text: 'Your Work',
       value: -2,
-      link: '/Portfolio'
+      link: '/Portfolio',
+      page: '3'
     },{
       text: 'Are you actually a bird?',
       value: 2
@@ -153,8 +219,19 @@ class Home extends Component {
   }]
 
   state = {
-    birdHidden: false,
-    birdPose: 'happy'
+    birdPose: 'happy',
+    flapping: true,
+    chatPose: 'start',
+    screenOn: false
+  }
+
+  constructor (props) {
+    super(props);
+    if(props.page === '1') {
+      this.state.chatPose = 'start'
+    } else {
+      this.state.chatPose = 'normal'
+    }
   }
 
   //Why does it have to be in this format?
@@ -162,17 +239,61 @@ class Home extends Component {
     this.setState({birdPose: pose})
   }
 
+  enterAnimation = () => {
+    this.setState({chatPose: 'startToNormal'})
+    setTimeout(
+      function() {
+          this.setState({flapping: false})
+          this.setState({screenOn: true})
+      }
+      .bind(this),
+      2000
+    )
+    this.setState({open: true})
+  }
+
+  exitAnimation = () => {
+    this.setState({screenOn: false})
+    this.setState({chatPose: 'normalToStart'})
+  }
+
+  componentDidMount(){
+    if(this.props.page === '1') {
+      this.enterAnimation()
+    } else {
+      this.setState({flapping: true})
+      this.exitAnimation()
+      let link = {
+        '0' : '/',
+        '1' : '/Home',
+        '2' : '/About',
+        '3' : '/Portfolio'
+      }
+      setTimeout(
+        function(link) {
+          this.props.history.push(link)
+        }
+        .bind(this),
+        2000,
+        link[this.props.page]
+      )
+    }
+  }
+
+  componentDidUpdate() {
+  }
+
   render() {
     return(
       <HomeBody>
         <ChatBody>
-          <ChatContainer>
-            <ChatScreen chatStart={[this.chat[0]]} chats={this.chat} updateBirdPose={this.UpdateBirdPose}/>
+          <ChatContainer pose={this.state.chatPose}>
+            <ChatScreen screenOn={this.state.screenOn} handlePageChange={this.props.handlePageChange} chatStart={[this.chats[0]]} chats={this.chats} updateBirdPose={this.UpdateBirdPose}/>
           </ChatContainer>
         </ChatBody>
         <CodeBirdBody>
-          <CodBirdContainer>
-            <CodeBird hidden={this.state.birdHidden} pose={this.state.birdPose}/>
+          <CodBirdContainer pose={this.state.chatPose}>
+            <CodeBird hidden={false} pose={this.state.birdPose} flapping={this.state.flapping}/>
           </CodBirdContainer>
         </CodeBirdBody>
       </HomeBody>
@@ -180,25 +301,18 @@ class Home extends Component {
   }
 }
 /*
-        <p>I am a computer developer with a love of the arts</p>
-        <p>Mainly pictures and animations</p>
-        <p>Was never that into theater</p>
-        <p>When I was young I believed I was going to be an artist</p>
-        <p>I would always draw pictures at home and in class</p>
-        <p>Don't tell my teachers that</p>
-        <p>That was how it was</p>
-        <p>Until one bored day in math class</p>
-        <p>Did you know, graphic calculators can be programed?</p>
-        <p>Took me a couple minutes, but I made my first program</p>
-        <p>Adding TWO numbers together</p>
-        <p>I've made more</p>
-        <p>*ahem* 'Useful'</p>
-        <p>Programs on it since then</p>
-        <p>And instead of going into college for art</p>
-        <p>I graduated with a Bachleor's degree in Computer Science</p>
-        <p>Still got an animation minor</p>
-        <p>Just because I learned that I loved Computer Science doesn't mean I suddenly disliked art</p>
-
+      <HomeBody>
+        <ChatBody>
+          <ChatContainer pose={this.state.chatPose}>
+            <ChatScreen changePage={this.handlePageChange} chatStart={[this.chats[0]]} chats={this.chats} updateBirdPose={this.UpdateBirdPose}/>
+          </ChatContainer>
+        </ChatBody>
+        <CodeBirdBody>
+          <CodBirdContainer pose={this.state.chatPose}>
+            <CodeBird hidden={this.state.birdHidden} pose={this.state.birdPose} flapping={this.state.flapping}/>
+          </CodBirdContainer>
+        </CodeBirdBody>
+      </HomeBody>
         <p>These are my previous projects and works</p>
 
         <p>Filing Sharing</p>
@@ -217,4 +331,4 @@ class Home extends Component {
         <p>And this one has actual front-end prettiness</p>
       </div> */
 
-export default Home
+export default withRouter(Home)

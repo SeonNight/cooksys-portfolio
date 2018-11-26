@@ -22,68 +22,30 @@ const NavButton = styled.button`
     width:30%;
   }
 `
-const NavButtonActive = styled.button`
-  display: inline-block;
-  background-color: rgb(32, 85, 182);
-  color: white;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  padding: 15px 32px;
-  border: none;
-  &:hover {
-    background-color: rgb(52, 54, 194);
-  }
-  &:active {
-    background-color: rgb(206, 255, 249);
-  }
-  @media screen (min-width: 650px) {
-    width:30%;
-  }
-`
-/*<DelayLink 
-    to="/next_page"
-    delay={800}
-    onDelayStart={() => { / fadeout class / }}
-    onDelayEnd={() => { / fadein class / }} /> */
+
 class Nav extends Component {
-
-  delayStart(e) {
-  }
-  delayEnd(e) {
-  }
-
   render() {
-    if(this.props.state === this.props.value) {
-      return(
-        <DelayLink to={this.props.link} delay={2000} onDelayStart={this.delayStart} onDelayEnd={this.delayEnd}>
-          <NavButtonActive onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButtonActive>
-        </DelayLink>
-      )
-    } else {
-      return(
-        <DelayLink to={this.props.link} delay={2000} onDelayStart={this.delayStart} onDelayEnd={this.delayEnd}>
-          <NavButton onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButton>
-        </DelayLink>
-      )
-    }
+    return(
+      <DelayLink to={this.props.link} delay={2000}>
+        <NavButton value={this.props.value} onClick={this.props.handlePageChange}>{this.props.name}</NavButton>
+      </DelayLink>
+    )
   }
 }
 /*
 class Nav extends Component {
 
-  render() {
     if(this.props.state === this.props.value) {
       return(
-        <Link to ={this.props.link}>
+        <DelayLink to={this.props.link} delay={2000}>
           <NavButtonActive onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButtonActive>
-        </Link>
+        </DelayLink>
       )
     } else {
       return(
-        <Link to ={this.props.link}>
+        <DelayLink to={this.props.link} delay={2000}>
           <NavButton onClick={this.props.onClick} value={this.props.value}>{this.props.name}</NavButton>
-        </Link>
+        </DelayLink>
       )
     }
   }

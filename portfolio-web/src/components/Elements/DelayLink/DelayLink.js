@@ -49,6 +49,7 @@ export default class DelayLink extends React.Component {
     const { replace, to, delay, onDelayStart, onDelayEnd } = this.props;
     const { history } = this.context.router;
 
+    //If there is an onclick function do it here
     if (typeof this.props.onClick != "undefined") {
       this.props.onClick(e)
    }

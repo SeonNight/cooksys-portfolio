@@ -2,6 +2,21 @@ import React, { Component } from 'react';
 
 
 import styled from 'styled-components'
+import ChatBubble from '../../Elements/ChatBubble/ChatBubble'
+import CodeBird from '../../Elements/CodeBird/CodeBird'
+
+const CenterBody = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: center;
+`
+
+const CodeBirdChat = styled.div`
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+`
 
 const ResumeImage = styled.img`
   width: 100%;
@@ -9,21 +24,124 @@ const ResumeImage = styled.img`
   object-fit: content;
 `
 
+const ChatContainer = styled.div`
+  position: relative;
+  width: 50%;
+  left: 20px;
+`
+
+const CodBirdContainer = styled.div`
+  position: relative;
+  width: 200px;
+  height: 180px;
+
+  left: 20px;
+`
+
 class About extends Component {
+  chats = [
+    {
+      text: 'My name is Seong Kim',
+      pose: 'normal'
+    },{
+      text: 'I am a computer developer with a love of the arts',
+      pose: 'happy'
+    },{
+      text: 'Mainly pictures and animations',
+      pose: 'normal'
+    },{
+      text: 'Was never that into theater',
+      pose: 'inquisitive'
+    },{
+      text: 'When I was young I wanted to become an artist',
+      pose: 'normal'
+    },{
+      text: 'I would always draw pictures at home and during class',
+      pose: 'normal'
+    },{
+      text: 'Sorry to all my past teachers',
+      pose: 'questioning'
+    },{
+      text: 'So I wanted to become an artist',
+      pose: 'normal'
+    },{
+      text: 'Until one bored day in math class',
+      pose: 'normal'
+    },{
+      text: 'Did you know, graphic calculators can be programmed?',
+      pose: 'inquisitive'
+    },{
+      text: 'I didn\' really understand it at first',
+      pose: 'normal'
+    },{
+      text: 'But there was this little bit of code that calculated the Quadratic formula',
+      pose: 'normal'
+    },{
+      text: 'It took me a while, but I made my first program',
+      pose: 'normal'
+    },{
+      text: 'Adding TWO numbers together',
+      pose: 'happy'
+    },{
+      text: 'I had made more *ahem* "Useful" programs since then',
+      pose: 'questioning'
+    },{
+      text: 'But because of this incident',
+      pose: 'normal'
+    },{
+      text: 'Instead of going to college for art, I graduated with a Bachelor\'s degree in Computer Science',
+      pose: 'happy'
+    },{
+      text: 'With an animation minor',
+      pose: 'normal'
+    },{
+      text: 'Just because I learned that I loved Computer Science doesn\'t mean I lost my passion for art',
+      pose: 'happy'
+    }
+  ]
+
+  state = {
+    chatIndex: 0,
+    atEnd: false,
+    birdHidden: false,
+  }
+
+  UpdateChatIndex = event => {
+    if(this.state.chatIndex < this.chats.length-1) {
+      this.setState({chatIndex: this.state.chatIndex + 1})
+      if((this.state.chatIndex + 2) === this.chats.length) {
+        this.setState({atEnd: true})
+      }
+    } else {
+      //Reset
+      this.setState({atEnd: false})
+      this.setState({chatIndex: 0})
+    }
+  }
+
+  //Why does it have to be in this format?
+  UpdateBirdPose = pose => {
+    this.setState({birdPose: pose})
+  }
+
   render() {
     return(
       <div>
         <h1>About Me</h1>
-        <div>
-          <div>
-            <h2>My Story</h2>
-            <p>I was born in South Korea, and moved here when I was about 6 years old. I help out at my korean church with the powerpoint, soundsystem, translation, since it's a korean church with some english speaking memebers, and play the drums. When I was little, I wanted to become an artist, until one bored day in math class. It was my last year in high school and I had a graphic calculator in front of me, standard issue TI-84, but a silver edition. Fun fact, there is the prgm button that you can press  that will allow you to write program on these caluclator. If I wanted to I could have cheated on sooo many math tests. The first time I pressed it there was this one program already there that calculated pythagorean theorem, you know the b plus minus square root of bla bla bla. Took me a bit to understand what was going on, but I was able to make my first program: Adding two numbers together. I've made other programs on it since then, mazes, a simple drawing program, snake, connect four, and pet battles. And instead of going to college for art like I planned, I graduated with a Bachleor's degree in Computer Science, but I still did get a minor in Animation. Since programs or otherwise, I love creating things. Give me popicle sticks and I can make you a combination locked box.</p>
-          </div>
+        <CenterBody>
+          <CodeBirdChat>
+            <ChatContainer>
+              <ChatBubble atEnd={this.state.atEnd} text={this.chats[this.state.chatIndex].text} updateIndex={this.UpdateChatIndex}/>
+            </ChatContainer>
+            <CodBirdContainer>
+              <CodeBird hidden={this.state.birdHidden} pose={this.chats[this.state.chatIndex].pose}/>
+            </CodBirdContainer>
+          </CodeBirdChat>
           <div>
             <h2>Resume</h2>
             <ResumeImage src={require("../../../images/resume.png")} alt="resume" />
           </div>
-        </div>
+        </CenterBody>
       </div>)
   }
 }

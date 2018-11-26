@@ -1,11 +1,44 @@
 import React, { Component } from 'react';
 
 import styled, {keyframes} from 'styled-components'
+import posed from "react-pose";
 
-import DelayLink from '../DelayLink/DelayLink'
-const ChatScreenBody = styled.div`
+const BlackScreenAnimation = posed.div({
+  start: {
+    length: '90%'
+  },
+  normal: {
+    length: 0
+  },
+  startToNormal: {
+    length: 0,
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from, to],
+      times: [0, 1],
+      duration: 1000
+    })
+  },
+  normalToStart: {
+    length: '90%',
+    transition: ({ from, to }) => ({
+      type: 'keyframes',
+      values: [from, to],
+      times: [0, 1],
+      duration: 1000
+    })
+  }
+})
 
+const BlackScreen = styled(BlackScreenAnimation)`
+  background-color: black;
+  position: absolute;
+  width: 90%;
 `
+
+const ChatScreenBody = styled.div`
+`
+
 const Pad = styled.div`
   background-color: grey;
   border: solid 3px rgb(85, 85, 85);
@@ -31,8 +64,7 @@ const Screen = styled.div`
 
 const TextBody = styled.div`
   width: 100%;
-
-  overflow: auto;
+  overflow-y: scroll;
 `
 
 const TextBox = styled.div`
@@ -130,7 +162,6 @@ class ChatScreenInput extends React.Component {
   }
 
   render() {
-    console.log(this)
     if(!this.props.backToLaunch) {
       return (
           <InputHelpText
@@ -143,11 +174,9 @@ class ChatScreenInput extends React.Component {
         )
     } else {
       return (
-        <DelayLink to ='/' delay={5000}>
-          <InputHelpText ref={(input) => {this.nameInput = input}}>
+          <InputHelpText onClick={this.props.handlePageChange} value='0' ref={(input) => {this.nameInput = input}}>
             Bye
           </InputHelpText>
-        </DelayLink>
       )
     }
   }
@@ -177,6 +206,11 @@ class ChatOptions extends Component {
     }
   }
 
+  changePage = (event) => {
+    console.log(event.target)
+    this.props.handlePageChange(event)
+  }
+
   render() {
     return(
       <InputBody>
@@ -184,9 +218,7 @@ class ChatOptions extends Component {
           {this.props.options.map((element,index) => {
             if(this.state.clicked === false) {
               if(element.value === -2) {
-                return <DelayLink key={index} to={element.link} delay={1000}>
-                    <InputButton value={element.value}>{element.text}</InputButton>
-                  </DelayLink>
+                return <InputButton key={index} onClick={this.changePage} value={element.page}>{element.text}</InputButton>
               }
               return <InputButton key={index} value={element.value} onClick={this.buttonClicked}>{element.text}</InputButton>
             } else {
@@ -204,7 +236,6 @@ class ChatScreen extends Component {
   state = {
     enableNext: true,
     nextValue: 1,
-    keyIndex: 0,
     chatIndex: 0,
     backToLaunch: false
   }
@@ -270,18 +301,19 @@ class ChatScreen extends Component {
       <ChatScreenBody> 
         <Pad>
           <Screen>
-            <TextBody>
-              {this.chats.map((element, index) => {
-                return <TextBox key={index}>
-                  <ChatScreenText text={element.text}/>
-                  <ChatOptions options={element.options} handleOptions={this.handleChatChange}/>
-                </TextBox>
-              })}
-              <div ref={el => { this.el = el; }} />
-            </TextBody>
-            <InputHelp>
-              <ChatScreenInput backToLaunch={this.state.backToLaunch} enabled={this.state.enableNext} value={this.state.nextValue} handleOnClick={this.handleChatChange}/>
-            </InputHelp>
+            <BlackScreen pose={this.props.screenOn? 'normal' : 'start'}/>
+              <TextBody>
+                {this.chats.map((element, index) => {
+                  return <TextBox key={index}>
+                    <ChatScreenText text={element.text}/>
+                    <ChatOptions handlePageChange={this.props.handlePageChange} options={element.options} handleOptions={this.handleChatChange}/>
+                  </TextBox>
+                })}
+                <div ref={el => { this.el = el; }} />
+              </TextBody>
+              <InputHelp>
+                <ChatScreenInput handlePageChange={this.props.handlePageChange} backToLaunch={this.state.backToLaunch} enabled={this.state.enableNext} value={this.state.nextValue} handleOnClick={this.handleChatChange}/>
+              </InputHelp>
           </Screen>
         </Pad>
       </ChatScreenBody>

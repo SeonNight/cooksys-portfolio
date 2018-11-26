@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-import DelayLink from '../../Elements/DelayLink/DelayLink'
+import { withRouter } from 'react-router-dom'
 
 import styled, {keyframes} from 'styled-components'
 import posed from "react-pose";
@@ -15,6 +14,23 @@ const Blinds = posed.div({
   },
   open: {
     top: -1000,
+    transition: {
+      duration: 700,
+      ease: 'easeIn'
+    }
+  }
+})
+
+const ImageMove = posed.div({
+  normal: {
+    top: 0,
+    transition: {
+      duration: 500,
+      ease: 'easeIn'
+    }
+  },
+  trans: {
+    top: 50,
     transition: {
       duration: 500,
       ease: 'easeIn'
@@ -32,7 +48,7 @@ const LandingBody = styled(Blinds)`
   z-index: 2;
 `
 
-const ImageContainer = styled.div`
+const ImageContainer = styled(ImageMove)`
   width: 700px;
   height: 750px;
   position: relative;
@@ -81,54 +97,65 @@ const HangingBird = styled.img`
   z-index: 2;
 `
 
+
 class Landing extends Component {
   state = {
-    status: 0,
-    opened: false,
-    opening: false,
-    birdOut: false,
     closing: false,
-    animationQueue: [],
-    currentAnimation: []
+
+    ringed: false,
+    moveImage: false,
+    moveBlind: false,
+    animationIndex: 0,
+    animationQueue: [
+      {moveImage: true},
+      {moveBlind: true}
+    ]
   }
 
-  bellClicked = event => {
-    console.log("RING!")
-    //If ti isn't already opening and stuff
-    if(!(this.state.opening || this.state.opened)) {
-      this.setState({opened: true})
-      this.setState({opening: true})
+  bellClicked = () => {
+    //If first time rining start the ring aniamtion
+    if(!this.state.ringed) {
+      this.props.handlePageChange('1')
     }
   }
 
+  componentDidMount() {
+    if(this.props.page !== '0') {
+      this.setState({ringed: true})
+      setTimeout(
+        function() {
+          this.props.history.push('/Home')
+        }
+        .bind(this),
+        2000
+      )
+    }
+  }
+
+  //Make sure verything is done in sequence
   componentDidUpdate() {
-  }
-
-  animateOpen() {
-
-  }
-  animateClose() {
-
+    if(this.state.ringed) {
+      if(this.state.animationIndex < this.state.animationQueue.length) {
+        this.setState(this.state.animationQueue[this.state.animationIndex])
+        this.setState({animationIndex: this.state.animationIndex + 1})
+      }
+    }
   }
 
   render() {
-    const opened = this.state.opened
-
     return(
-      <LandingBody id='LandingBody' pose={opened ? 'open' : 'close'} ref={el => { this.el = el; }} >
-        <ImageContainer>
+      <LandingBody id='LandingBody' pose={this.state.moveBlind ? 'open' : 'close'} ref={el => { this.el = el; }} >
+        <ImageContainer pose={this.state.moveImage ? 'trans' : 'normal'}>
           <BellBody>
-            <DelayLink to ='/Home' onClick={this.bellClicked} delay={2000}>
-              <BellImg src={require('../../../images/bell.png')}/>
-            </DelayLink>
+            <BellImg value='1' onClick={this.bellClicked} src={require('../../../images/bell.png')}/>
           </BellBody>
           <LandingImg src={require('../../../images/bird-house-outside.png')}/>
         </ImageContainer>
-        <HangingBird style={this.state.opening? {height: '180px', bottom: '-182px'} : {height: '0',bottom: '0px'}} src={require('../../../images/code-bird/code-bird-hanging.png')} alt='bird_handing'/>
+        <HangingBird style={this.state.moveImage? {height: '180px', bottom: '-182px'} : {height: '0',bottom: '0px'}} src={require('../../../images/code-bird/code-bird-hanging.png')} alt='bird_handing'/>
       </LandingBody>
     )
   }
 }
 
 //<LandingBody id='LandingBody'pose={opened ? 'open' : 'closed'}  className={opened ? 'LandingOpen' : 'LandingClosed'}>
-export default Landing;
+export default withRouter(Landing);
